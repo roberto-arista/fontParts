@@ -18,17 +18,16 @@ from fontParts.base.compatibility import AnchorCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedAnchor, RemovedAnchor
 from fontParts.base.annotations import (
-    QuadrupleType,
-    QuadrupleCollectionType,
-    SextupleCollectionType,
+    AffineTransformationLike,
+    ColorLike,
     IntFloatType,
+    RGBA,
 )
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
     from fontParts.base.layer import BaseLayer
     from fontParts.base.glyph import BaseGlyph
-
 
 class BaseAnchor(
     BaseObject,
@@ -420,18 +419,18 @@ class BaseAnchor(
         """,
     )
 
-    def _get_base_color(self) -> Color | None:
+    def _get_base_color(self) -> RGBA | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
-    def _set_base_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
+    def _set_base_color(self, value: ColorLike) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_color(self) -> ColorLike | None:
         """Get the native anchor's color.
 
         This is the environment implementation of the :attr:`BaseAnchor.color`
@@ -450,7 +449,7 @@ class BaseAnchor(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleType[float] | None) -> None:
+    def _set_color(self, value: RGBA | None) -> None:
         """Set the native anchor's color.
 
         Description
@@ -475,7 +474,7 @@ class BaseAnchor(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native anchor according to the given matrix.
 

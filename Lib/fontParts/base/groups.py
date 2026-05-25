@@ -6,7 +6,7 @@ from collections.abc import MutableMapping
 from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedGroups, RemovedGroups
-from fontParts.base.annotations import CollectionType
+from fontParts.base.annotations import NameSequence
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 ValueType = tuple[str, ...]
 GroupsDict = dict[str, ValueType]
-
 
 class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     """Represent the basis for a groups object.
@@ -39,7 +38,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     """
 
     keyNormalizer: Callable[[str], str] = normalizers.normalizeGroupKey
-    valueNormalizer: Callable[[CollectionType[str]], ValueType] = (
+    valueNormalizer: Callable[[NameSequence], ValueType] = (
         normalizers.normalizeGroupValue
     )
 
@@ -100,7 +99,6 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
         :param glyphName: The name of the glyph to search for as a :class:`str`.
         :return: A :class:`list` of :class:`str` items.
-
 
         Example::
 
@@ -351,7 +349,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super().__len__()
 
-    def __setitem__(self, groupName: str, glyphNames: CollectionType[str]) -> None:
+    def __setitem__(self, groupName: str, glyphNames: NameSequence) -> None:
         """Set the glyph names for a given group in the current groups instance.
 
         :param groupName: The group name to set as a :class:`str`.
@@ -379,7 +377,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         super().clear()
 
     def get(
-        self, groupName: str, default: CollectionType[str] | None = None
+        self, groupName: str, default: NameSequence | None = None
     ) -> tuple[str, ...] | None:
         """Get the contents for the given group in the current groups instance.
 
@@ -457,7 +455,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         return super().values()
 
     def pop(
-        self, groupName: str, default: CollectionType[str] | None = None
+        self, groupName: str, default: NameSequence | None = None
     ) -> tuple[str, ...] | None:
         """Remove the specified group and return its associated contents.
 
@@ -478,7 +476,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super().pop(groupName, default)
 
-    def update(self, otherGroups: MutableMapping[str, CollectionType[str]]) -> None:
+    def update(self, otherGroups: MutableMapping[str, NameSequence]) -> None:
         """Update the current groups instance with key-value pairs from another.
 
         For each group in `otherGroups`:

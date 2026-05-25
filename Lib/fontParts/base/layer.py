@@ -19,17 +19,16 @@ from fontParts.base.deprecated import DeprecatedLayer, RemovedLayer
 from fontParts.base.annotations import (
     CharacterMappingType,
     CollectionType,
-    QuadrupleCollectionType,
-    TransformationType,
+    ColorLike,
+    NameSequence,
     ReverseComponentMappingType,
-    IntFloatType,
+    ScaleFactorLike,
 )
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.lib import BaseLib
-
 
 class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
     """Provide common glyph interaction.
@@ -548,11 +547,11 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
         selected = tuple(glyph.name for glyph in self.selectedGlyphs)
         return selected
 
-    def _set_base_selectedGlyphNames(self, value: CollectionType[str]) -> None:
+    def _set_base_selectedGlyphNames(self, value: NameSequence) -> None:
         normalized = [normalizers.normalizeGlyphName(name) for name in value]
         self._set_selectedGlyphNames(normalized)
 
-    def _set_selectedGlyphNames(self, value: CollectionType[str]) -> None:
+    def _set_selectedGlyphNames(self, value: NameSequence) -> None:
         """Set the selected glyph names in the layer.
 
         This is the environment implementation of
@@ -597,7 +596,6 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
     @abstractmethod
     def _set_defaultLayer(self, value: BaseLayer) -> None:
         pass
-
 
 class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLayer):
     """Represent the basis for a layer object.
@@ -796,7 +794,6 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             or :class:`float` values representing the color,
             or :obj:`None` if no color is assigned.
 
-
         Example::
 
             >>> layer.color
@@ -806,20 +803,20 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """,
     )
 
-    def _get_base_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_base_color(self) -> ColorLike | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
     def _set_base_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
+        self, value: ColorLike | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:  # type: ignore[return]
+    def _get_color(self) -> ColorLike | None:  # type: ignore[return]
         """Get the color of the layer.
 
         This is the environment implementation of
@@ -839,7 +836,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         self.raiseNotImplementedError()
 
     def _set_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None, **kwargs: Any
+        self, value: ColorLike | None, **kwargs: Any
     ) -> None:
         r"""Get or set the color of the layer.
 
@@ -1008,7 +1005,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: ScaleFactorLike,
         minLayer: BaseLayer,
         maxLayer: BaseLayer,
         round: bool = True,
@@ -1057,7 +1054,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def _interpolate(
         self,
-        factor: TransformationType,
+        factor: ScaleFactorLike,
         minLayer: BaseLayer,
         maxLayer: BaseLayer,
         round: bool,

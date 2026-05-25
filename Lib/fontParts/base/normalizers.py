@@ -7,17 +7,20 @@ from pathlib import Path
 import datetime
 
 from fontParts.base.annotations import (
-    T,
-    PairType,
-    QuadrupleType,
-    SextupleType,
-    CollectionType,
-    PairCollectionType,
-    QuadrupleCollectionType,
-    SextupleCollectionType,
+    AffineTransformation,
+    AffineTransformationLike,
+    ColorLike,
+    Coordinate,
+    CoordinateLike,
     IntFloatType,
-    TransformationType,
+    KerningPair,
+    KerningPairLike,
     LibValueType,
+    NameSequence,
+    RGBA,
+    ScaleFactorLike,
+    T,
+    UnicodeSequence,
 )
 
 if TYPE_CHECKING:
@@ -35,7 +38,6 @@ if TYPE_CHECKING:
 # Font
 # ----
 
-
 def normalizeFileFormatVersion(value: int) -> int:
     """Normalize a font's file format version.
 
@@ -49,7 +51,6 @@ def normalizeFileFormatVersion(value: int) -> int:
             f"Expected file formmat verison 'value' to be of type int, not {type(value).__name__}."
         )
     return value
-
 
 def normalizeFileStructure(value: str) -> str:
     """Normalize a font's file structure.
@@ -66,8 +67,7 @@ def normalizeFileStructure(value: str) -> str:
         )
     return value
 
-
-def normalizeLayerOrder(value: CollectionType[str], font) -> tuple[str, ...]:
+def normalizeLayerOrder(value: NameSequence, font) -> tuple[str, ...]:
     """Normalize layer order.
 
     :param value: The layer order to normalize as a :class:`list`
@@ -104,7 +104,6 @@ def normalizeLayerOrder(value: CollectionType[str], font) -> tuple[str, ...]:
         )
     return tuple(value)
 
-
 def normalizeDefaultLayerName(value: str, font) -> str:
     """Normalize a default layer name.
 
@@ -125,8 +124,7 @@ def normalizeDefaultLayerName(value: str, font) -> str:
         raise ValueError(f"No layer with the name '{value}' exists.")
     return str(value)
 
-
-def normalizeGlyphOrder(value: CollectionType[str]) -> tuple[str, ...]:
+def normalizeGlyphOrder(value: NameSequence) -> tuple[str, ...]:
     """Normalize glyph order.
 
     :param value: The glyph order to normalize as a :class:`list`
@@ -153,13 +151,11 @@ def normalizeGlyphOrder(value: CollectionType[str]) -> tuple[str, ...]:
         )
     return tuple(value)
 
-
 # -------
 # Kerning
 # -------
 
-
-def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
+def normalizeKerningKey(value: KerningPairLike) -> KerningPair:
     """Normalize a kerning key.
 
     :param value: The kerning key to normalize as a :class:`tuple`
@@ -202,7 +198,6 @@ def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
         raise ValueError("Right Kerning key group must start with public.kern2.")
     return (left, right)
 
-
 def normalizeKerningValue(value: IntFloatType) -> IntFloatType:
     """Normalize a kerning value.
 
@@ -218,11 +213,9 @@ def normalizeKerningValue(value: IntFloatType) -> IntFloatType:
         )
     return value
 
-
 # ------
 # Groups
 # ------
-
 
 def normalizeGroupKey(value: str) -> str:
     """Normalize a group key.
@@ -239,8 +232,7 @@ def normalizeGroupKey(value: str) -> str:
         raise ValueError("Group key must be at least one character long.")
     return value
 
-
-def normalizeGroupValue(value: CollectionType[str]) -> tuple[str, ...]:
+def normalizeGroupValue(value: NameSequence) -> tuple[str, ...]:
     """Normalize a group value.
 
     :param value: The group value to normalize as a :class:`list`
@@ -257,11 +249,9 @@ def normalizeGroupValue(value: CollectionType[str]) -> tuple[str, ...]:
     value = [normalizeGlyphName(v) for v in value]
     return tuple(value)
 
-
 # --------
 # Features
 # --------
-
 
 def normalizeFeatureText(value: str) -> str:
     """Normalize feature text.
@@ -275,11 +265,9 @@ def normalizeFeatureText(value: str) -> str:
         raise TypeError(f"Feature text must be a string, not {type(value).__name__}.")
     return value
 
-
 # ---
 # Lib
 # ---
-
 
 def normalizeLibKey(value: str) -> str:
     """Normalize a lib key.
@@ -295,7 +283,6 @@ def normalizeLibKey(value: str) -> str:
     if len(value) < 1:
         raise ValueError("Lib key must be at least one character.")
     return value
-
 
 def normalizeLibValue(value: LibValueType) -> LibValueType:
     """Normalize a lib value.
@@ -339,11 +326,9 @@ def normalizeLibValue(value: LibValueType) -> LibValueType:
             normalizeLibValue(v)
     return value
 
-
 # -----
 # Layer
 # -----
-
 
 def normalizeLayer(value: BaseLayer) -> BaseLayer:
     """Normalize a layer.
@@ -356,7 +341,6 @@ def normalizeLayer(value: BaseLayer) -> BaseLayer:
     from fontParts.base.layer import BaseLayer
 
     return normalizeInternalObjectType(value, BaseLayer, "Layer")
-
 
 def normalizeLayerName(value: str) -> str:
     """Normalize a layer name.
@@ -373,11 +357,9 @@ def normalizeLayerName(value: str) -> str:
         raise ValueError("Layer names must be at least one character long.")
     return value
 
-
 # -----
 # Glyph
 # -----
-
 
 def normalizeGlyph(value: BaseGlyph) -> BaseGlyph:
     """Normalize a glyph.
@@ -390,7 +372,6 @@ def normalizeGlyph(value: BaseGlyph) -> BaseGlyph:
     from fontParts.base.glyph import BaseGlyph
 
     return normalizeInternalObjectType(value, BaseGlyph, "Glyph")
-
 
 def normalizeGlyphName(value: str) -> str:
     """Normalize a glyph's name.
@@ -407,8 +388,7 @@ def normalizeGlyphName(value: str) -> str:
         raise ValueError("Glyph names must be at least one character long.")
     return value
 
-
-def normalizeGlyphUnicodes(value: CollectionType[int]) -> tuple[int, ...]:
+def normalizeGlyphUnicodes(value: UnicodeSequence) -> tuple[int, ...]:
     """Normalize a glyph's unicodes.
 
     :param value: The glyph unicodes to normalize as a :class:`list`
@@ -431,7 +411,6 @@ def normalizeGlyphUnicodes(value: CollectionType[int]) -> tuple[int, ...]:
     if len(duplicates) != 0:
         raise ValueError("Duplicate unicode values are not allowed.")
     return tuple(values)
-
 
 def normalizeGlyphUnicode(value: int | str) -> int:
     """Normalize a glyph's unicode.
@@ -458,7 +437,6 @@ def normalizeGlyphUnicode(value: int | str) -> int:
         raise ValueError("Glyph unicode must be in the Unicode range.")
     return value
 
-
 def normalizeGlyphWidth(value: IntFloatType) -> IntFloatType:
     """Normalize a glyph's width.
 
@@ -472,7 +450,6 @@ def normalizeGlyphWidth(value: IntFloatType) -> IntFloatType:
             f"Glyph width must be int or float, not {type(value).__name__}."
         )
     return value
-
 
 def normalizeGlyphLeftMargin(value: IntFloatType | None) -> IntFloatType | None:
     """Normalize a glyph's left margin.
@@ -489,7 +466,6 @@ def normalizeGlyphLeftMargin(value: IntFloatType | None) -> IntFloatType | None:
         )
     return value
 
-
 def normalizeGlyphRightMargin(value: IntFloatType | None) -> IntFloatType | None:
     """Normalize a glyph's right margin.
 
@@ -505,7 +481,6 @@ def normalizeGlyphRightMargin(value: IntFloatType | None) -> IntFloatType | None
         )
     return value
 
-
 def normalizeGlyphHeight(value: IntFloatType) -> IntFloatType:
     """Normalize a glyph's height.
 
@@ -519,7 +494,6 @@ def normalizeGlyphHeight(value: IntFloatType) -> IntFloatType:
             f"Glyph height must be int or float, not {type(value).__name__}."
         )
     return value
-
 
 def normalizeGlyphBottomMargin(value: IntFloatType | None) -> IntFloatType | None:
     """Normalize a glyph's bottom margin.
@@ -536,7 +510,6 @@ def normalizeGlyphBottomMargin(value: IntFloatType | None) -> IntFloatType | Non
         )
     return value
 
-
 def normalizeGlyphTopMargin(value: IntFloatType | None) -> IntFloatType | None:
     """Normalize a glyph's top margin.
 
@@ -551,7 +524,6 @@ def normalizeGlyphTopMargin(value: IntFloatType | None) -> IntFloatType | None:
             f"Glyph top margin must be int or float, not {type(value).__name__}."
         )
     return value
-
 
 def normalizeGlyphFormatVersion(value: IntFloatType) -> int:
     """Normalize a glyph's format version for saving to XML string.
@@ -572,11 +544,9 @@ def normalizeGlyphFormatVersion(value: IntFloatType) -> int:
         raise ValueError(f"Glyph Format Version must be either 1 or 2, not {value}.")
     return value
 
-
 # -------
 # Contour
 # -------
-
 
 def normalizeContour(value: BaseContour) -> BaseContour:
     """Normalize a contour.
@@ -590,11 +560,9 @@ def normalizeContour(value: BaseContour) -> BaseContour:
 
     return normalizeInternalObjectType(value, BaseContour, "Contour")
 
-
 # -----
 # Point
 # -----
-
 
 def normalizePointType(value: str) -> str:
     """Normalize a point type.
@@ -626,7 +594,6 @@ def normalizePointType(value: str) -> str:
         )
     return value
 
-
 def normalizePointName(value: str) -> str:
     """Normalize a point name.
 
@@ -642,7 +609,6 @@ def normalizePointName(value: str) -> str:
         raise ValueError("Point names must be at least one character long.")
     return value
 
-
 def normalizePoint(value: BasePoint) -> BasePoint:
     """Normalize a point.
 
@@ -655,11 +621,9 @@ def normalizePoint(value: BasePoint) -> BasePoint:
 
     return normalizeInternalObjectType(value, BasePoint, "Point")
 
-
 # -------
 # Segment
 # -------
-
 
 def normalizeSegment(value: BaseSegment) -> BaseSegment:
     """Normalize a segment.
@@ -672,7 +636,6 @@ def normalizeSegment(value: BaseSegment) -> BaseSegment:
     from fontParts.base.segment import BaseSegment
 
     return normalizeInternalObjectType(value, BaseSegment, "Segment")
-
 
 def normalizeSegmentType(value: str) -> str:
     """Normalize a segment type.
@@ -703,11 +666,9 @@ def normalizeSegmentType(value: str) -> str:
         )
     return value
 
-
 # ------
 # BPoint
 # ------
-
 
 def normalizeBPoint(value: BaseBPoint) -> BaseBPoint:
     """Normalize a bPoint.
@@ -720,7 +681,6 @@ def normalizeBPoint(value: BaseBPoint) -> BaseBPoint:
     from fontParts.base.bPoint import BaseBPoint
 
     return normalizeInternalObjectType(value, BaseBPoint, "bPoint")
-
 
 def normalizeBPointType(value: str) -> str:
     """Normalize a bPoint type.
@@ -747,11 +707,9 @@ def normalizeBPointType(value: str) -> str:
         raise ValueError(f"bPoint type must be 'corner' or 'curve', not {value!r}.")
     return value
 
-
 # ---------
 # Component
 # ---------
-
 
 def normalizeComponent(value: BaseComponent) -> BaseComponent:
     """Normalize a component.
@@ -765,8 +723,7 @@ def normalizeComponent(value: BaseComponent) -> BaseComponent:
 
     return normalizeInternalObjectType(value, BaseComponent, "Component")
 
-
-def normalizeComponentScale(value: PairCollectionType[IntFloatType]) -> PairType[float]:
+def normalizeComponentScale(value: CoordinateLike) -> Coordinate:
     """Normalize a component scale.
 
     :param value: The component scale to noramlize as a :class:`list`
@@ -790,11 +747,9 @@ def normalizeComponentScale(value: PairCollectionType[IntFloatType]) -> PairType
             )
     return (float(value[0]), float(value[1]))
 
-
 # ------
 # Anchor
 # ------
-
 
 def normalizeAnchor(value: BaseAnchor) -> BaseAnchor:
     """Normalize an anchor.
@@ -807,7 +762,6 @@ def normalizeAnchor(value: BaseAnchor) -> BaseAnchor:
     from fontParts.base.anchor import BaseAnchor
 
     return normalizeInternalObjectType(value, BaseAnchor, "Anchor")
-
 
 def normalizeAnchorName(value: str) -> str:
     """Normalize an anchor name.
@@ -827,11 +781,9 @@ def normalizeAnchorName(value: str) -> str:
         raise ValueError("Anchor names must be at least one character long or None.")
     return value
 
-
 # ---------
 # Guideline
 # ---------
-
 
 def normalizeGuideline(value: BaseGuideline) -> BaseGuideline:
     """Normalize a guideline.
@@ -844,7 +796,6 @@ def normalizeGuideline(value: BaseGuideline) -> BaseGuideline:
     from fontParts.base.guideline import BaseGuideline
 
     return normalizeInternalObjectType(value, BaseGuideline, "Guideline")
-
 
 def normalizeGuidelineName(value: str) -> str:
     """Normalize a guideline name.
@@ -861,11 +812,9 @@ def normalizeGuidelineName(value: str) -> str:
         raise ValueError("Guideline names must be at least one character long.")
     return value
 
-
 # -------
 # Generic
 # -------
-
 
 def normalizeInternalObjectType(value: object, cls: type[T], name: str) -> T:
     """Normalize an internal object type.
@@ -883,7 +832,6 @@ def normalizeInternalObjectType(value: object, cls: type[T], name: str) -> T:
         )
     return value
 
-
 def normalizeBoolean(value: int) -> bool:
     """Normalize a boolean.
 
@@ -899,9 +847,7 @@ def normalizeBoolean(value: int) -> bool:
         raise ValueError(f"Boolean values must be True or False, not '{value}'.")
     return value
 
-
 # Identification
-
 
 def normalizeIndex(value: int | None) -> int | None:
     """Normalize an index.
@@ -917,7 +863,6 @@ def normalizeIndex(value: int | None) -> int | None:
                 f"Indexes must be None or integers, not {type(value).__name__}."
             )
     return value
-
 
 def normalizeIdentifier(value: str | None) -> str | None:
     """Normalize an identifier.
@@ -952,9 +897,7 @@ def normalizeIdentifier(value: str | None) -> str | None:
             )
     return value
 
-
 # Coordinates
-
 
 def normalizeX(value: IntFloatType) -> IntFloatType:
     """Normalize an x-coordinate.
@@ -970,7 +913,6 @@ def normalizeX(value: IntFloatType) -> IntFloatType:
         )
     return value
 
-
 def normalizeY(value: IntFloatType) -> IntFloatType:
     """Normalize a y-coordinate.
 
@@ -985,10 +927,9 @@ def normalizeY(value: IntFloatType) -> IntFloatType:
         )
     return value
 
-
 def normalizeCoordinateTuple(
-    value: PairCollectionType[IntFloatType],
-) -> PairType[IntFloatType]:
+    value: CoordinateLike,
+) -> Coordinate:
     """Normalize a coordinate tuple.
 
     :param value: The coordinate tuple to noramlize as a :class:`list`
@@ -1012,10 +953,9 @@ def normalizeCoordinateTuple(
     y = normalizeY(y)
     return (x, y)
 
-
 def normalizeBoundingBox(
-    value: QuadrupleCollectionType[IntFloatType],
-) -> QuadrupleType[float]:
+    value: ColorLike,
+) -> RGBA:
     """Normalize a bounding box.
 
     :param value: The bounding box to normalize as a :class:`list`
@@ -1054,7 +994,6 @@ def normalizeBoundingBox(
         raise ValueError("Bounding box yMin must be less than or equal to yMax.")
     return (float(xMin), float(yMin), float(xMax), float(yMax))
 
-
 def normalizeArea(value: IntFloatType) -> float:
     """Normalize an area.
 
@@ -1071,7 +1010,6 @@ def normalizeArea(value: IntFloatType) -> float:
     if value < 0:
         raise ValueError(f"Area must be a positive int or float, not {repr(value)}.")
     return float(value)
-
 
 def normalizeRotationAngle(value: IntFloatType) -> float:
     """Normalize an angle.
@@ -1095,13 +1033,11 @@ def normalizeRotationAngle(value: IntFloatType) -> float:
         value = value + 360
     return float(value)
 
-
-# Color
-
+# RGBA
 
 def normalizeColor(
-    value: QuadrupleCollectionType[IntFloatType],
-) -> QuadrupleType[float]:
+    value: ColorLike,
+) -> RGBA:
     """Normalize a color.
 
     :param value: The color to normalize as a :class:`list` or :class:`tuple`
@@ -1136,9 +1072,7 @@ def normalizeColor(
     r, g, b, a = value
     return (float(r), float(g), float(b), float(a))
 
-
 # Note
-
 
 def normalizeGlyphNote(value: str) -> str:
     """Normalize a glyph note.
@@ -1152,9 +1086,7 @@ def normalizeGlyphNote(value: str) -> str:
         raise TypeError(f"Note must be a string, not {type(value).__name__}.")
     return value
 
-
 # File Path
-
 
 def normalizeFilePath(value: str | Path) -> str:
     """Normalize a file path.
@@ -1171,11 +1103,9 @@ def normalizeFilePath(value: str | Path) -> str:
         )
     return str(value)
 
-
 # Interpolation
 
-
-def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
+def normalizeInterpolationFactor(value: ScaleFactorLike) -> Coordinate:
     """Normalize an interpolation factor.
 
     :param value: The interpolation factor to normalize as a single :class:`int`
@@ -1210,15 +1140,13 @@ def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
             )
     return (float(value[0]), float(value[1]))
 
-
 # ---------------
 # Transformations
 # ---------------
 
-
 def normalizeTransformationMatrix(
-    value: SextupleCollectionType[IntFloatType],
-) -> SextupleType[float]:
+    value: AffineTransformationLike,
+) -> AffineTransformation:
     """Normalize a transformation matrix.
 
     :param value: The transformation matrix to normalize as a :class:`list`
@@ -1247,10 +1175,9 @@ def normalizeTransformationMatrix(
     a, b, c, d, e, f = value
     return (float(a), float(b), float(c), float(d), float(e), float(f))
 
-
 def normalizeTransformationOffset(
-    value: PairCollectionType[IntFloatType],
-) -> PairType[IntFloatType]:
+    value: CoordinateLike,
+) -> Coordinate:
     """Normalize a transformation offset.
 
     :param value: The transformation offset to normalize as a :class:`list`
@@ -1265,8 +1192,7 @@ def normalizeTransformationOffset(
     """
     return normalizeCoordinateTuple(value)
 
-
-def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[float]:
+def normalizeTransformationSkewAngle(value: ScaleFactorLike) -> Coordinate:
     """Normalize a transformation skew angle.
 
     :param value: The skew angle to normalize as a single :class:`int`
@@ -1310,8 +1236,7 @@ def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[floa
         normalized.append(float(v + 360) if v < 0 else float(v))
     return (normalized[0], normalized[1])
 
-
-def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
+def normalizeTransformationScale(value: ScaleFactorLike) -> Coordinate:
     """Normalize a transformation scale.
 
     :param value: The scale to normalize as a single :class:`int`
@@ -1345,7 +1270,6 @@ def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
                 f"Transformation scale tuple values must be int or float, not {type(v).__name__}."
             )
     return (float(value[0]), float(value[1]))
-
 
 def normalizeVisualRounding(value: IntFloatType) -> int:
     """Normalize rounding.

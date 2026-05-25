@@ -18,17 +18,16 @@ from fontParts.base.compatibility import GuidelineCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
 from fontParts.base.annotations import (
-    QuadrupleType,
-    QuadrupleCollectionType,
-    SextupleCollectionType,
+    AffineTransformationLike,
+    ColorLike,
     IntFloatType,
+    RGBA,
 )
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
     from fontParts.base.layer import BaseLayer
     from fontParts.base.glyph import BaseGlyph
-
 
 class BaseGuideline(
     BaseObject,
@@ -524,7 +523,7 @@ class BaseGuideline(
 
         The value must be a :ref:`type-color` or :obj:`None`.
 
-        :return: A :class:`Color` instance representing the color of the guideline,
+        :return: A :class:`RGBA` instance representing the color of the guideline,
             or :obj:`None`.
 
         Example::
@@ -536,20 +535,20 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_color(self) -> QuadrupleType[float] | None:
+    def _get_base_color(self) -> RGBA | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
     def _set_base_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
+        self, value: ColorLike | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleType[float] | None:
+    def _get_color(self) -> RGBA | None:
         """Get the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
@@ -568,7 +567,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleType[float] | None) -> None:
+    def _set_color(self, value: RGBA | None) -> None:
         """Set the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
@@ -591,7 +590,7 @@ class BaseGuideline(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native guideline according to the given matrix.
 
@@ -690,7 +689,6 @@ class BaseGuideline(
         Example::`
 
             >>> guideline.round()
-
 
         """
         self._round()

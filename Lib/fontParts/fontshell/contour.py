@@ -3,7 +3,10 @@ from typing import TYPE_CHECKING, Optional, Any
 
 import defcon
 from fontParts.base import BaseContour
-from fontParts.base.annotations import PairCollectionType, QuadrupleType, IntFloatType
+from fontParts.base.annotations import (
+    BoundingBox,
+    CoordinateLike,
+)
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.point import RPoint
 from fontParts.fontshell.segment import RSegment
@@ -11,7 +14,6 @@ from fontParts.fontshell.bPoint import RBPoint
 
 if TYPE_CHECKING:
     from fontParts.base import BasePoint
-
 
 class RContour(RBaseObject, BaseContour):
     wrapClass = defcon.Contour
@@ -56,7 +58,7 @@ class RContour(RBaseObject, BaseContour):
     # Bounds
     # ------
 
-    def _get_bounds(self) -> QuadrupleType[float] | None:
+    def _get_bounds(self) -> BoundingBox | None:
         return self.naked().bounds
 
     # ----
@@ -80,7 +82,7 @@ class RContour(RBaseObject, BaseContour):
     # Point and Contour Inside
     # ------------------------
 
-    def _pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def _pointInside(self, point: CoordinateLike) -> bool:
         return self.naked().pointInside(point)
 
     def _contourInside(self, otherContour: BaseContour) -> bool:
@@ -101,7 +103,7 @@ class RContour(RBaseObject, BaseContour):
     def _insertPoint(
         self,
         index: int,
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         type: str | None = None,
         smooth: bool | None = None,
         name: str | None = None,

@@ -4,12 +4,11 @@ from collections.abc import ItemsView
 
 import defcon
 from fontParts.base import BaseGroups
-from fontParts.base.annotations import CollectionType
+from fontParts.base.annotations import NameSequence
 from fontParts.fontshell.base import RBaseObject
 
 ValueType = tuple[str, ...]
 GroupsDict = dict[str, ValueType]
-
 
 class RGroups(RBaseObject, BaseGroups):
     wrapClass = defcon.Groups
@@ -33,7 +32,7 @@ class RGroups(RBaseObject, BaseGroups):
         groups = self.naked()
         return key in groups
 
-    def _setItem(self, key: str, value: CollectionType[str]) -> None:
+    def _setItem(self, key: str, value: NameSequence) -> None:
         groups = self.naked()
         groups[key] = tuple(value)
 

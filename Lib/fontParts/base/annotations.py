@@ -1,48 +1,85 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
-from typing import Dict, List, Protocol, Tuple, TypeVar, Union
+from typing import Protocol, TypeVar, Union
 import datetime
 
 from fontTools.pens.basePen import AbstractPen
 from fontTools.pens.pointPen import AbstractPointPen
 
-# Generic
 T = TypeVar("T")
 
-PairType = tuple[T, T]
-QuadrupleType = tuple[T, T, T, T]
-QuintupleType = tuple[T, T, T, T, T]
-SextupleType = tuple[T, T, T, T, T, T]
+# Generic numeric scalar.
+IntFloatType = int | float
+
+# Generic list-or-tuple — for collections of objects where a domain-specific
+# name doesn't apply (e.g. setter inputs that accept either a list or a tuple
+# of base objects or indices). Domain-named sequences are defined below.
 CollectionType = Union[list[T], tuple[T, ...]]
-PairCollectionType = Union[list[T], PairType[T]]
-QuadrupleCollectionType = Union[list[T], QuadrupleType[T]]
-SextupleCollectionType = Union[list[T], SextupleType[T]]
 
-# Builtins
-IntFloatType = Union[int, float]
+# 2D point / offset / scale result — (x, y).
+Coordinate = tuple[IntFloatType, IntFloatType]
+CoordinateLike = list[IntFloatType] | Coordinate
 
-# Pens
+# Bounding box — (xMin, yMin, xMax, yMax).
+BoundingBox = tuple[IntFloatType, IntFloatType, IntFloatType, IntFloatType]
+BoundingBoxLike = list[IntFloatType] | BoundingBox
+
+# RGBA color tuple — floats in [0, 1] after normalization. (The `Color` class
+# in `fontParts.base.color` wraps an `RGBA` to add `.r/.g/.b/.a` accessors.)
+RGBA = tuple[float, float, float, float]
+ColorLike = (
+    list[IntFloatType]
+    | tuple[IntFloatType, IntFloatType, IntFloatType, IntFloatType]
+)
+
+# Affine transformation matrix — (xx, xy, yx, yy, dx, dy).
+AffineTransformation = tuple[float, float, float, float, float, float]
+AffineTransformationLike = (
+    list[IntFloatType]
+    | tuple[
+        IntFloatType,
+        IntFloatType,
+        IntFloatType,
+        IntFloatType,
+        IntFloatType,
+        IntFloatType,
+    ]
+)
+
+# Kerning pair — (left, right) glyph or group names.
+KerningPair = tuple[str, str]
+KerningPairLike = list[str] | KerningPair
+
+# Scale factor input — scalar (uniform) or (sx, sy) (non-uniform).
+ScaleFactorLike = IntFloatType | list[IntFloatType] | Coordinate
+
+# Variable-length sequences of names or unicodes.
+NameSequence = list[str] | tuple[str, ...]
+UnicodeSequence = list[int] | tuple[int, ...]
+
+# Pens.
 PenType = AbstractPen
 PointPenType = AbstractPointPen
 
-# Mapping
+# Mappings.
 CharacterMappingType = dict[int, tuple[str, ...]]
 ReverseComponentMappingType = dict[str, tuple[str, ...]]
 
-# Kerning
-KerningDictType = dict[PairType[str], PairType[str]]
+# Flat kerning — (left, right) → value.
+KerningDictType = dict[KerningPair, IntFloatType]
 
-# Lib
-LibValueType = Union[
-    str,
-    IntFloatType,
-    bool,
-    CollectionType["LibValueType"],
-    dict[str, "LibValueType"],
-    bytes,
-    bytearray,
-    datetime.datetime,
-]
+# Lib values — primitives plus nested collections.
+LibValueType = (
+    str
+    | IntFloatType
+    | bool
+    | bytes
+    | bytearray
+    | datetime.datetime
+    | list["LibValueType"]
+    | tuple["LibValueType", ...]
+    | dict[str, "LibValueType"]
+)
 
 
 class LibValue:
@@ -65,10 +102,7 @@ class LibValue:
     """
 
 
-# Transformation
-TransformationType = Union[IntFloatType, list[IntFloatType], PairType[IntFloatType]]
-
-# Interpolation
+# Interpolation.
 InterpolatableType = TypeVar("InterpolatableType", bound="Interpolatable")
 
 
@@ -84,5 +118,5 @@ class Interpolatable(Protocol):
     ) -> InterpolatableType: ...
 
     def __mul__(
-        self: InterpolatableType, other: TransformationType
+        self: InterpolatableType, other: ScaleFactorLike
     ) -> InterpolatableType: ...

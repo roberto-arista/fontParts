@@ -12,13 +12,13 @@ from fontParts.base.compatibility import FontCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedFont, RemovedFont
 from fontParts.base.annotations import (
     CharacterMappingType,
-    CollectionType,
+    ColorLike,
+    CoordinateLike,
     IntFloatType,
-    QuadrupleCollectionType,
-    PairCollectionType,
-    TransformationType,
     KerningDictType,
+    NameSequence,
     ReverseComponentMappingType,
+    ScaleFactorLike,
 )
 
 if TYPE_CHECKING:
@@ -30,7 +30,6 @@ if TYPE_CHECKING:
     from fontParts.base.layer import BaseLayer
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.guideline import BaseGuideline
-
 
 class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont):
     """Represent the basis for a font object.
@@ -917,11 +916,11 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     )
 
     def _get_base_layerOrder(self) -> tuple[str, ...]:
-        value: CollectionType[str] = self._get_layerOrder()
+        value: NameSequence = self._get_layerOrder()
         value = normalizers.normalizeLayerOrder(value, self)
         return value
 
-    def _set_base_layerOrder(self, value: CollectionType[str]) -> None:
+    def _set_base_layerOrder(self, value: NameSequence) -> None:
         value = normalizers.normalizeLayerOrder(value, self)
         self._set_layerOrder(value)
 
@@ -944,7 +943,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         self.raiseNotImplementedError()
 
-    def _set_layerOrder(self, value: CollectionType[str], **kwargs: Any) -> None:
+    def _set_layerOrder(self, value: NameSequence, **kwargs: Any) -> None:
         r"""Set the order of the layers in the native font.
 
         This is the environment implementation of the
@@ -1148,7 +1147,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     # new
 
     def newLayer(
-        self, name: str, color: QuadrupleCollectionType[IntFloatType] | None = None
+        self, name: str, color: ColorLike | None = None
     ) -> BaseLayer:
         """Create a new layer in the font.
 
@@ -1177,7 +1176,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     def _newLayer(  # type: ignore[return]
         self,
         name: str,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: ColorLike | None,
         **kwargs: Any,
     ) -> BaseLayer:
         r"""Create a new layer in the native font.
@@ -1566,7 +1565,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         value = normalizers.normalizeGlyphOrder(value)
         return value
 
-    def _set_base_glyphOrder(self, value: CollectionType[str]) -> None:
+    def _set_base_glyphOrder(self, value: NameSequence) -> None:
         value = normalizers.normalizeGlyphOrder(value)
         self._set_glyphOrder(value)
 
@@ -1589,7 +1588,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         self.raiseNotImplementedError()
 
-    def _set_glyphOrder(self, value: CollectionType[str]) -> None:
+    def _set_glyphOrder(self, value: NameSequence) -> None:
         r"""Set the order of the glyphs in the native font.
 
         This is the environment implementation of the
@@ -1772,10 +1771,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         angle: IntFloatType | None = None,
         name: str | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: ColorLike | None = None,
         guideline: BaseGuideline | None = None,
     ) -> BaseGuideline:
         """Append a new guideline to the font.
@@ -1843,10 +1842,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _appendGuideline(  # type: ignore[return]
         self,
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         angle: float | None,
         name: str | None,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: ColorLike | None,
         **kwargs: Any,
     ) -> BaseGuideline:
         r"""Append a new guideline to the native font.
@@ -1942,7 +1941,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: ScaleFactorLike,
         minFont: BaseFont,
         maxFont: BaseFont,
         round: bool = True,
@@ -1991,7 +1990,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _interpolate(
         self,
-        factor: TransformationType,
+        factor: ScaleFactorLike,
         minFont: BaseFont,
         maxFont: BaseFont,
         round: bool,

@@ -15,8 +15,7 @@ from fontParts.base.base import (
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
 from fontParts.base.annotations import (
-    QuintupleType,
-    SextupleCollectionType,
+    AffineTransformationLike,
     IntFloatType,
 )
 
@@ -25,7 +24,6 @@ if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.lib import BaseLib
     from fontParts.base.contour import BaseContour
-
 
 class BasePoint(
     BaseObject,
@@ -48,7 +46,7 @@ class BasePoint(
 
     """
 
-    copyAttributes: QuintupleType[str] = ("type", "smooth", "x", "y", "name")
+    copyAttributes: tuple[str, str, str, str, str] = ("type", "smooth", "x", "y", "name")
 
     def _reprContents(self) -> list[str]:
         contents = [f"{self.type}", f"({self.x}, {self.y})"]
@@ -565,7 +563,7 @@ class BasePoint(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native point.
 

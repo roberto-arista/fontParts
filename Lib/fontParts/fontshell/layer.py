@@ -3,14 +3,13 @@ from typing import TYPE_CHECKING, Optional, Tuple, Dict, Any
 
 import defcon
 from fontParts.base import BaseLayer
-from fontParts.base.annotations import QuadrupleCollectionType, IntFloatType
+from fontParts.base.annotations import ColorLike
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.lib import RLib
 from fontParts.fontshell.glyph import RGlyph
 
 if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
-
 
 class RLayer(RBaseObject, BaseLayer):
     wrapClass = defcon.Layer
@@ -45,14 +44,14 @@ class RLayer(RBaseObject, BaseLayer):
 
     # color
 
-    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_color(self) -> ColorLike | None:
         value = self.naked().color
         if value is not None:
             value = tuple(value)
         return value
 
     def _set_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None, **kwargs: Any
+        self, value: ColorLike | None, **kwargs: Any
     ) -> None:
         self.naked().color = value
 

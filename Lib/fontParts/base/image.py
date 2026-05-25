@@ -14,21 +14,19 @@ from fontParts.base import normalizers
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedImage, RemovedImage
 from fontParts.base.annotations import (
-    PairType,
-    PairCollectionType,
-    QuadrupleType,
-    QuadrupleCollectionType,
-    SextupleType,
-    SextupleCollectionType,
-    IntFloatType,
-    TransformationType,
+    AffineTransformation,
+    AffineTransformationLike,
+    ColorLike,
+    Coordinate,
+    CoordinateLike,
+    RGBA,
+    ScaleFactorLike,
 )
 
 if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.layer import BaseLayer
     from fontParts.base.font import BaseFont
-
 
 class BaseImage(
     BaseObject, TransformationMixin, SelectionMixin, DeprecatedImage, RemovedImage
@@ -166,18 +164,18 @@ class BaseImage(
         """,
     )
 
-    def _get_base_transformation(self) -> SextupleType[float]:
+    def _get_base_transformation(self) -> AffineTransformation:
         value = self._get_transformation()
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
     def _set_base_transformation(
-        self, value: SextupleCollectionType[IntFloatType]
+        self, value: AffineTransformationLike
     ) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
-    def _get_transformation(self) -> SextupleCollectionType[IntFloatType]:
+    def _get_transformation(self) -> AffineTransformationLike:
         """Get the native image's transformation matrix.
 
         This is the environment implementation of the
@@ -196,7 +194,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
+    def _set_transformation(self, value: AffineTransformationLike) -> None:
         """Set the native image's transformation matrix.
 
         This is the environment implementation of the
@@ -231,16 +229,16 @@ class BaseImage(
         """,
     )
 
-    def _get_base_offset(self) -> PairType[IntFloatType]:
+    def _get_base_offset(self) -> Coordinate:
         value = self._get_offset()
         value = normalizers.normalizeTransformationOffset(value)
         return value
 
-    def _set_base_offset(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_base_offset(self, value: CoordinateLike) -> None:
         value = normalizers.normalizeTransformationOffset(value)
         self._set_offset(value)
 
-    def _get_offset(self) -> PairCollectionType[IntFloatType]:
+    def _get_offset(self) -> CoordinateLike:
         """Get the native image's offset.
 
         This is the environment implementation of the :attr:`BaseImage.offset`
@@ -258,7 +256,7 @@ class BaseImage(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (ox, oy)
 
-    def _set_offset(self, value: PairType[IntFloatType]) -> None:
+    def _set_offset(self, value: Coordinate) -> None:
         """Set the native image's offset.
 
         This is the environment implementation of the :attr:`BaseImage.offset`
@@ -295,16 +293,16 @@ class BaseImage(
         """,
     )
 
-    def _get_base_scale(self) -> PairType[float]:
+    def _get_base_scale(self) -> Coordinate:
         value = self._get_scale()
         value = normalizers.normalizeTransformationScale(value)
         return value
 
-    def _set_base_scale(self, value: TransformationType) -> None:
+    def _set_base_scale(self, value: ScaleFactorLike) -> None:
         value = normalizers.normalizeTransformationScale(value)
         self._set_scale(value)
 
-    def _get_scale(self) -> TransformationType:
+    def _get_scale(self) -> ScaleFactorLike:
         """Get the native image's scale.
 
         This is the environment implementation of the :attr:`BaseImage.scale`
@@ -322,7 +320,7 @@ class BaseImage(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (sx, sy)
 
-    def _set_scale(self, value: PairType[float]) -> None:
+    def _set_scale(self, value: Coordinate) -> None:
         """Set the native image's scale.
 
         This is the environment implementation of the :attr:`BaseImage.scale`
@@ -342,7 +340,7 @@ class BaseImage(
         sx, sy = value
         self.transformation = (sx, sxy, syx, sy, ox, oy)
 
-    # Color
+    # RGBA
 
     color: dynamicProperty = dynamicProperty(
         "base_color",
@@ -350,7 +348,7 @@ class BaseImage(
 
         The value must be a :ref:`type-color` or :obj`None`.
 
-        :return: A :class:`Color` instance representing the color of the image,
+        :return: A :class:`RGBA` instance representing the color of the image,
             or :obj:`None`.
 
         Example::
@@ -362,20 +360,20 @@ class BaseImage(
         """,
     )
 
-    def _get_base_color(self) -> Color | None:
+    def _get_base_color(self) -> RGBA | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
     def _set_base_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
+        self, value: ColorLike | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_color(self) -> ColorLike | None:
         """Get the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
@@ -394,7 +392,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleType[float] | None) -> None:
+    def _set_color(self, value: RGBA | None) -> None:
         """Set the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
@@ -473,7 +471,7 @@ class BaseImage(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native image.
 

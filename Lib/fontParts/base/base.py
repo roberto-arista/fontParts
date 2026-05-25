@@ -22,12 +22,12 @@ from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
-    PairType,
-    PairCollectionType,
-    SextupleCollectionType,
+    AffineTransformationLike,
+    Coordinate,
+    CoordinateLike,
     IntFloatType,
-    TransformationType,
     InterpolatableType,
+    ScaleFactorLike,
 )
 
 if TYPE_CHECKING:
@@ -40,7 +40,6 @@ ValueType = TypeVar("ValueType")
 # -------
 # Helpers
 # -------
-
 
 class dynamicProperty:
     """Represent a property for simplified subclassing.
@@ -72,12 +71,10 @@ class dynamicProperty:
 
             foo = property(_get_foo, _set_foo)
 
-
         class MyObject(BaseObject):
 
             def _set_foo(self, value):
                 self._foo = value * 100
-
 
         >>> m = MyObject()
         >>> m.foo
@@ -107,12 +104,10 @@ class dynamicProperty:
             def _set_foo(self, value):
                 self._foo = value
 
-
         class MyObject(BaseObject):
 
             def _set_foo(self, value):
                 self._foo = value * 100
-
 
         >>> m = MyObject()
         >>> m.foo
@@ -147,11 +142,10 @@ class dynamicProperty:
         else:
             raise FontPartsError(f"no setter for {self.name!r}")
 
-
 def interpolate(
     minValue: InterpolatableType,
     maxValue: InterpolatableType,
-    factor: TransformationType,
+    factor: ScaleFactorLike,
 ) -> InterpolatableType:
     """Interpolate between two number-like objects.
 
@@ -180,11 +174,9 @@ def interpolate(
             f"Factor must be an int or minValue float, not {type(factor).__name__}."
         ) from exc
 
-
 # ------------
 # Base Objects
 # ------------
-
 
 class BaseObject(Generic[BaseObjectType]):
     r"""Provide common base functionality to objects.
@@ -392,7 +384,6 @@ class BaseObject(Generic[BaseObjectType]):
         """
         self.raiseNotImplementedError()
 
-
 class BaseItems(Generic[KeyType, ValueType]):
     """Provide the given mapping with an items view object.
 
@@ -452,7 +443,6 @@ class BaseItems(Generic[KeyType, ValueType]):
 
         """
         return f"{self._mapping.__class__.__name__}_items({list(self)})"
-
 
 class BaseKeys(Generic[KeyType]):
     """Provide the given mapping with a keys view object.
@@ -517,7 +507,6 @@ class BaseKeys(Generic[KeyType]):
         """
         return set(self).isdisjoint(other)
 
-
 class BaseValues(Generic[ValueType]):
     """Provide the given mapping with a values view object.
 
@@ -571,7 +560,6 @@ class BaseValues(Generic[ValueType]):
 
         """
         return f"{self._mapping.__class__.__name__}_values({list(self)})"
-
 
 class BaseDict(BaseObject, Generic[KeyType, ValueType]):
     """Provide objects with basic dictionary-like functionality.
@@ -989,7 +977,6 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         for key in self.keys():
             del self[key]
 
-
 class TransformationMixin(ABC):
     """Provide objects transformation-related functionality."""
 
@@ -999,8 +986,8 @@ class TransformationMixin(ABC):
 
     def transformBy(
         self,
-        matrix: SextupleCollectionType[IntFloatType],
-        origin: PairCollectionType[IntFloatType] | None = None,
+        matrix: AffineTransformationLike,
+        origin: CoordinateLike | None = None,
     ) -> None:
         """Transform the object according to the given matrix.
 
@@ -1029,7 +1016,7 @@ class TransformationMixin(ABC):
         self._transformBy(matrix)
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native object according to the given matrix.
 
@@ -1049,7 +1036,7 @@ class TransformationMixin(ABC):
         """
         self.raiseNotImplementedError()
 
-    def moveBy(self, value: PairCollectionType[IntFloatType]) -> None:
+    def moveBy(self, value: CoordinateLike) -> None:
         """Move the object according to the given coordinates.
 
         :param value: The x and y values to move the object by as
@@ -1063,7 +1050,7 @@ class TransformationMixin(ABC):
         value = normalizers.normalizeTransformationOffset(value)
         self._moveBy(value)
 
-    def _moveBy(self, value: PairType[IntFloatType], **kwargs: Any) -> None:
+    def _moveBy(self, value: Coordinate, **kwargs: Any) -> None:
         r"""Move the native object according to the given coordinates.
 
         This is the environment implementation of :meth:`BaseObject.moveBy`.
@@ -1084,8 +1071,8 @@ class TransformationMixin(ABC):
 
     def scaleBy(
         self,
-        value: TransformationType,
-        origin: PairCollectionType[IntFloatType] | None = None,
+        value: ScaleFactorLike,
+        origin: CoordinateLike | None = None,
     ) -> None:
         """Scale the object according to the given values.
 
@@ -1110,7 +1097,7 @@ class TransformationMixin(ABC):
         self._scaleBy(value, origin=origin)
 
     def _scaleBy(
-        self, value: PairType[float], origin: PairType[IntFloatType], **kwargs: Any
+        self, value: Coordinate, origin: Coordinate, **kwargs: Any
     ) -> None:
         r"""Scale the native object according to the given values.
 
@@ -1138,7 +1125,7 @@ class TransformationMixin(ABC):
     def rotateBy(
         self,
         value: IntFloatType,
-        origin: PairCollectionType[IntFloatType] | None = None,
+        origin: CoordinateLike | None = None,
     ) -> None:
         """Rotate the object by the specified value.
 
@@ -1161,7 +1148,7 @@ class TransformationMixin(ABC):
         self._rotateBy(value, origin=origin)
 
     def _rotateBy(
-        self, value: float, origin: PairType[IntFloatType], **kwargs: Any
+        self, value: float, origin: Coordinate, **kwargs: Any
     ) -> None:
         r"""Rotate the native object by the specified value.
 
@@ -1186,8 +1173,8 @@ class TransformationMixin(ABC):
 
     def skewBy(
         self,
-        value: TransformationType,
-        origin: PairCollectionType[IntFloatType] | None = None,
+        value: ScaleFactorLike,
+        origin: CoordinateLike | None = None,
     ) -> None:
         """Skew the object by the given value.
 
@@ -1212,7 +1199,7 @@ class TransformationMixin(ABC):
         self._skewBy(value, origin=origin)
 
     def _skewBy(
-        self, value: PairType[float], origin: PairType[IntFloatType], **kwargs: Any
+        self, value: Coordinate, origin: Coordinate, **kwargs: Any
     ) -> None:
         r"""Skew the native object by the given value.
 
@@ -1246,7 +1233,6 @@ class TransformationMixin(ABC):
     @abstractmethod
     def raiseNotImplementedError(self):
         pass
-
 
 class InterpolationMixin(ABC):
     """Provide objects with interpolation-related functionality.
@@ -1309,7 +1295,6 @@ class InterpolationMixin(ABC):
     @abstractmethod
     def raiseNotImplementedError(self):
         pass
-
 
 class SelectionMixin(ABC):
     """Provide objects with selection-related functionality."""
@@ -1402,7 +1387,6 @@ class SelectionMixin(ABC):
     def raiseNotImplementedError(self):
         pass
 
-
 class PointPositionMixin(ABC):
     """Provide objects with the ability to determine point position.
 
@@ -1422,16 +1406,16 @@ class PointPositionMixin(ABC):
         """,
     )
 
-    def _get_base_position(self) -> PairType[IntFloatType]:
+    def _get_base_position(self) -> Coordinate:
         value = self._get_position()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
 
-    def _set_base_position(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_base_position(self, value: CoordinateLike) -> None:
         value = normalizers.normalizeCoordinateTuple(value)
         self._set_position(value)
 
-    def _get_position(self) -> PairType[IntFloatType]:
+    def _get_position(self) -> Coordinate:
         """Get the point position of the object.
 
         This is the environment implementation of
@@ -1448,7 +1432,7 @@ class PointPositionMixin(ABC):
         """
         return (self.x, self.y)
 
-    def _set_position(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_position(self, value: CoordinateLike) -> None:
         """Set the point position of the object.
 
         This is the environment implementation of
@@ -1516,7 +1500,6 @@ class PointPositionMixin(ABC):
     @abstractmethod
     def raiseNotImplementedError(self):
         pass
-
 
 class IdentifierMixin(ABC):
     """Provide objects with a unique identifier."""
@@ -1617,7 +1600,6 @@ class IdentifierMixin(ABC):
     def raiseNotImplementedError(self):
         pass
 
-
 def reference(obj: Any) -> Callable[[], Any]:
     """
     This code returns a simple function that returns the given object.
@@ -1631,7 +1613,6 @@ def reference(obj: Any) -> Callable[[], Any]:
         return obj
 
     return wrapper
-
 
 class FuzzyNumber:
     """Represent a number like object with a threshold.

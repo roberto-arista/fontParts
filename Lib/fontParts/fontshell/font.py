@@ -4,10 +4,9 @@ import os
 
 import defcon
 from fontParts.base.annotations import (
-    CollectionType,
-    PairCollectionType,
-    QuadrupleCollectionType,
-    IntFloatType,
+    ColorLike,
+    CoordinateLike,
+    NameSequence,
 )
 from fontParts.base import BaseFont
 from fontParts.fontshell.base import RBaseObject
@@ -18,7 +17,6 @@ from fontParts.fontshell.features import RFeatures
 from fontParts.fontshell.lib import RLib
 from fontParts.fontshell.layer import RLayer
 from fontParts.fontshell.guideline import RGuideline
-
 
 class RFont(RBaseObject, BaseFont):
     wrapClass = defcon.Font
@@ -123,7 +121,7 @@ class RFont(RBaseObject, BaseFont):
     def _get_layerOrder(self, **kwargs: Any) -> tuple[str, ...]:
         return self.naked().layers.layerOrder
 
-    def _set_layerOrder(self, value: CollectionType[str], **kwargs: Any) -> None:
+    def _set_layerOrder(self, value: NameSequence, **kwargs: Any) -> None:
         self.naked().layers.layerOrder = value
 
     # default layer
@@ -144,7 +142,7 @@ class RFont(RBaseObject, BaseFont):
     def _newLayer(
         self,
         name: str,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: ColorLike | None,
         **kwargs: Any,
     ) -> RLayer:
         layers = self.naked().layers
@@ -165,7 +163,7 @@ class RFont(RBaseObject, BaseFont):
     def _get_glyphOrder(self) -> tuple[str, ...]:
         return self.naked().glyphOrder
 
-    def _set_glyphOrder(self, value: CollectionType[str]) -> None:
+    def _set_glyphOrder(self, value: NameSequence) -> None:
         self.naked().glyphOrder = value
 
     # ----------
@@ -181,10 +179,10 @@ class RFont(RBaseObject, BaseFont):
 
     def _appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         angle: float | None,
         name: str | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: ColorLike | None = None,
         identifier: str | None = None,
         **kwargs: Any,
     ) -> RGuideline:
