@@ -619,7 +619,7 @@ def _sortValue_isMonospace(font):
 # ----------
 
 
-class _EnvironmentDispatcher(object):
+class _EnvironmentDispatcher:
     def __init__(self, registryItems):
         self._registry = {item: None for item in registryItems}
 
