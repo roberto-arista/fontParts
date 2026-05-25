@@ -5,7 +5,7 @@ from fontParts.base.base import dynamicProperty
 # ----
 
 
-class BaseCompatibilityReporter(object):
+class BaseCompatibilityReporter:
     objectName = "Base"
 
     def __init__(self, obj1, obj2):
@@ -115,7 +115,7 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Font"
 
     def __init__(self, font1, font2):
-        super(FontCompatibilityReporter, self).__init__(font1, font2)
+        super().__init__(font1, font2)
         self.guidelineCountDifference = False
         self.layerCountDifference = False
         self.guidelinesMissingFromFont2 = []
@@ -201,7 +201,7 @@ class LayerCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Layer"
 
     def __init__(self, layer1, layer2):
-        super(LayerCompatibilityReporter, self).__init__(layer1, layer2)
+        super().__init__(layer1, layer2)
         self.glyphCountDifference = False
         self.glyphsMissingFromLayer2 = []
         self.glyphsMissingInLayer1 = []
@@ -259,7 +259,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Glyph"
 
     def __init__(self, glyph1, glyph2):
-        super(GlyphCompatibilityReporter, self).__init__(glyph1, glyph2)
+        super().__init__(glyph1, glyph2)
         self.contourCountDifference = False
         self.componentCountDifference = False
         self.guidelineCountDifference = False
@@ -413,7 +413,7 @@ class ContourCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Contour"
 
     def __init__(self, contour1, contour2):
-        super(ContourCompatibilityReporter, self).__init__(contour1, contour2)
+        super().__init__(contour1, contour2)
         self.openDifference = False
         self.directionDifference = False
         self.segmentCountDifference = False
@@ -470,7 +470,7 @@ class SegmentCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Segment"
 
     def __init__(self, contour1, contour2):
-        super(SegmentCompatibilityReporter, self).__init__(contour1, contour2)
+        super().__init__(contour1, contour2)
         self.typeDifference = False
 
     segment1 = dynamicProperty("object1")
@@ -501,7 +501,7 @@ class ComponentCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Component"
 
     def __init__(self, component1, component2):
-        super(ComponentCompatibilityReporter, self).__init__(component1, component2)
+        super().__init__(component1, component2)
         self.baseDifference = False
 
     component1 = dynamicProperty("object1")
@@ -532,7 +532,7 @@ class AnchorCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Anchor"
 
     def __init__(self, anchor1, anchor2):
-        super(AnchorCompatibilityReporter, self).__init__(anchor1, anchor2)
+        super().__init__(anchor1, anchor2)
         self.nameDifference = False
 
     anchor1 = dynamicProperty("object1")
@@ -563,7 +563,7 @@ class GuidelineCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Guideline"
 
     def __init__(self, guideline1, guideline2):
-        super(GuidelineCompatibilityReporter, self).__init__(guideline1, guideline2)
+        super().__init__(guideline1, guideline2)
         self.nameDifference = False
 
     guideline1 = dynamicProperty("object1")

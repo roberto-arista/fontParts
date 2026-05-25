@@ -64,7 +64,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
         if attr in fontInfoAttributesVersion3:
             return True
-        return super(BaseInfo, self).__hasattr__(attr)
+        return super().__hasattr__(attr)
 
     # get
 
@@ -76,7 +76,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
             if value is not None:
                 value = self._validateFontInfoAttributeValue(attr, value)
             return value
-        return super(BaseInfo, self).__getattribute__(attr)
+        return super().__getattribute__(attr)
 
     def _getAttr(self, attr):
         """
@@ -102,7 +102,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
             if value is not None:
                 value = self._validateFontInfoAttributeValue(attr, value)
             return self._setAttr(attr, value)
-        return super(BaseInfo, self).__setattr__(attr, value)
+        return super().__setattr__(attr, value)
 
     def _setAttr(self, attr, value):
         """
