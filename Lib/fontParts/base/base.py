@@ -41,6 +41,7 @@ ValueType = TypeVar("ValueType")
 # Helpers
 # -------
 
+
 class dynamicProperty:
     """Represent a property for simplified subclassing.
 
@@ -142,10 +143,9 @@ class dynamicProperty:
         else:
             raise FontPartsError(f"no setter for {self.name!r}")
 
+
 def interpolate(
-    minValue: InterpolatableType,
-    maxValue: InterpolatableType,
-    factor: ScaleFactorLike,
+    minValue: InterpolatableType, maxValue: InterpolatableType, factor: ScaleFactorLike
 ) -> InterpolatableType:
     """Interpolate between two number-like objects.
 
@@ -174,9 +174,11 @@ def interpolate(
             f"Factor must be an int or minValue float, not {type(factor).__name__}."
         ) from exc
 
+
 # ------------
 # Base Objects
 # ------------
+
 
 class BaseObject(Generic[BaseObjectType]):
     r"""Provide common base functionality to objects.
@@ -384,6 +386,7 @@ class BaseObject(Generic[BaseObjectType]):
         """
         self.raiseNotImplementedError()
 
+
 class BaseItems(Generic[KeyType, ValueType]):
     """Provide the given mapping with an items view object.
 
@@ -443,6 +446,7 @@ class BaseItems(Generic[KeyType, ValueType]):
 
         """
         return f"{self._mapping.__class__.__name__}_items({list(self)})"
+
 
 class BaseKeys(Generic[KeyType]):
     """Provide the given mapping with a keys view object.
@@ -507,6 +511,7 @@ class BaseKeys(Generic[KeyType]):
         """
         return set(self).isdisjoint(other)
 
+
 class BaseValues(Generic[ValueType]):
     """Provide the given mapping with a values view object.
 
@@ -560,6 +565,7 @@ class BaseValues(Generic[ValueType]):
 
         """
         return f"{self._mapping.__class__.__name__}_values({list(self)})"
+
 
 class BaseDict(BaseObject, Generic[KeyType, ValueType]):
     """Provide objects with basic dictionary-like functionality.
@@ -788,9 +794,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         self.raiseNotImplementedError()
 
-    def get(
-        self, key: KeyType, default: ValueType | None = None
-    ) -> ValueType | None:
+    def get(self, key: KeyType, default: ValueType | None = None) -> ValueType | None:
         """Get the value for a given key in the object.
 
         If the given key is not found, The specified `default` will be returned.
@@ -856,9 +860,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         self.raiseNotImplementedError()
 
-    def pop(
-        self, key: KeyType, default: ValueType | None = None
-    ) -> ValueType | None:
+    def pop(self, key: KeyType, default: ValueType | None = None) -> ValueType | None:
         """Remove a key from the object and return it's value.
 
         If the given key is not found, The specified `default` will be returned.
@@ -977,6 +979,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         for key in self.keys():
             del self[key]
 
+
 class TransformationMixin(ABC):
     """Provide objects transformation-related functionality."""
 
@@ -985,9 +988,7 @@ class TransformationMixin(ABC):
     # ---------------
 
     def transformBy(
-        self,
-        matrix: AffineTransformationLike,
-        origin: CoordinateLike | None = None,
+        self, matrix: AffineTransformationLike, origin: CoordinateLike | None = None
     ) -> None:
         """Transform the object according to the given matrix.
 
@@ -1015,9 +1016,7 @@ class TransformationMixin(ABC):
             matrix = tuple(t)
         self._transformBy(matrix)
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native object according to the given matrix.
 
         This is the environment implementation of :meth:`TransformationMixin.transformBy`.
@@ -1070,9 +1069,7 @@ class TransformationMixin(ABC):
         self.transformBy(tuple(t), **kwargs)
 
     def scaleBy(
-        self,
-        value: ScaleFactorLike,
-        origin: CoordinateLike | None = None,
+        self, value: ScaleFactorLike, origin: CoordinateLike | None = None
     ) -> None:
         """Scale the object according to the given values.
 
@@ -1096,9 +1093,7 @@ class TransformationMixin(ABC):
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._scaleBy(value, origin=origin)
 
-    def _scaleBy(
-        self, value: Coordinate, origin: Coordinate, **kwargs: Any
-    ) -> None:
+    def _scaleBy(self, value: Coordinate, origin: Coordinate, **kwargs: Any) -> None:
         r"""Scale the native object according to the given values.
 
         This is the environment implementation of :meth:`BaseObject.scaleBy`.
@@ -1123,9 +1118,7 @@ class TransformationMixin(ABC):
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
     def rotateBy(
-        self,
-        value: IntFloatType,
-        origin: CoordinateLike | None = None,
+        self, value: IntFloatType, origin: CoordinateLike | None = None
     ) -> None:
         """Rotate the object by the specified value.
 
@@ -1147,9 +1140,7 @@ class TransformationMixin(ABC):
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._rotateBy(value, origin=origin)
 
-    def _rotateBy(
-        self, value: float, origin: Coordinate, **kwargs: Any
-    ) -> None:
+    def _rotateBy(self, value: float, origin: Coordinate, **kwargs: Any) -> None:
         r"""Rotate the native object by the specified value.
 
         This is the environment implementation of :meth:`TransformationMixin.rotateBy`.
@@ -1172,9 +1163,7 @@ class TransformationMixin(ABC):
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
     def skewBy(
-        self,
-        value: ScaleFactorLike,
-        origin: CoordinateLike | None = None,
+        self, value: ScaleFactorLike, origin: CoordinateLike | None = None
     ) -> None:
         """Skew the object by the given value.
 
@@ -1198,9 +1187,7 @@ class TransformationMixin(ABC):
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._skewBy(value, origin=origin)
 
-    def _skewBy(
-        self, value: Coordinate, origin: Coordinate, **kwargs: Any
-    ) -> None:
+    def _skewBy(self, value: Coordinate, origin: Coordinate, **kwargs: Any) -> None:
         r"""Skew the native object by the given value.
 
         This is the environment implementation of :meth:`TransformationMixin.skewBy`.
@@ -1233,6 +1220,7 @@ class TransformationMixin(ABC):
     @abstractmethod
     def raiseNotImplementedError(self):
         pass
+
 
 class InterpolationMixin(ABC):
     """Provide objects with interpolation-related functionality.
@@ -1295,6 +1283,7 @@ class InterpolationMixin(ABC):
     @abstractmethod
     def raiseNotImplementedError(self):
         pass
+
 
 class SelectionMixin(ABC):
     """Provide objects with selection-related functionality."""
@@ -1386,6 +1375,7 @@ class SelectionMixin(ABC):
     @abstractmethod
     def raiseNotImplementedError(self):
         pass
+
 
 class PointPositionMixin(ABC):
     """Provide objects with the ability to determine point position.
@@ -1501,6 +1491,7 @@ class PointPositionMixin(ABC):
     def raiseNotImplementedError(self):
         pass
 
+
 class IdentifierMixin(ABC):
     """Provide objects with a unique identifier."""
 
@@ -1600,6 +1591,7 @@ class IdentifierMixin(ABC):
     def raiseNotImplementedError(self):
         pass
 
+
 def reference(obj: Any) -> Callable[[], Any]:
     """
     This code returns a simple function that returns the given object.
@@ -1613,6 +1605,7 @@ def reference(obj: Any) -> Callable[[], Any]:
         return obj
 
     return wrapper
+
 
 class FuzzyNumber:
     """Represent a number like object with a threshold.

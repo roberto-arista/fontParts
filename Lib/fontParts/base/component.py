@@ -33,6 +33,7 @@ if TYPE_CHECKING:
     from fontParts.base.layer import BaseLayer
     from fontParts.base.font import BaseFont
 
+
 class BaseComponent(
     BaseObject,
     TransformationMixin,
@@ -92,9 +93,7 @@ class BaseComponent(
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for component already set")
         if glyph is not None:
@@ -237,9 +236,7 @@ class BaseComponent(
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
-    def _set_base_transformation(
-        self, value: AffineTransformationLike
-    ) -> None:
+    def _set_base_transformation(self, value: AffineTransformationLike) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
@@ -554,9 +551,7 @@ class BaseComponent(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the component according to the given matrix.
 
         This is the environment implementation of :meth:`BaseComponent.transformBy`.

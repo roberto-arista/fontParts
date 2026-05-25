@@ -29,6 +29,7 @@ if TYPE_CHECKING:
     from fontParts.base.layer import BaseLayer
     from fontParts.base.glyph import BaseGlyph
 
+
 class BaseGuideline(
     BaseObject,
     TransformationMixin,
@@ -89,9 +90,7 @@ class BaseGuideline(
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
@@ -150,9 +149,7 @@ class BaseGuideline(
             return self.glyph.font
         return None
 
-    def _set_font(
-        self, font: BaseFont | Callable[[], BaseFont] | None
-    ) -> None:
+    def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
@@ -541,9 +538,7 @@ class BaseGuideline(
             value = Color(value)
         return value
 
-    def _set_base_color(
-        self, value: ColorLike | None
-    ) -> None:
+    def _set_base_color(self, value: ColorLike | None) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
@@ -589,9 +584,7 @@ class BaseGuideline(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native guideline according to the given matrix.
 
         This is the environment implementation of :meth:`BaseGuideline.transformBy`.

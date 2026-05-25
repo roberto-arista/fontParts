@@ -11,6 +11,7 @@ from fontParts.fontshell.glyph import RGlyph
 if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
 
+
 class RLayer(RBaseObject, BaseLayer):
     wrapClass = defcon.Layer
     libClass = RLib
@@ -50,9 +51,7 @@ class RLayer(RBaseObject, BaseLayer):
             value = tuple(value)
         return value
 
-    def _set_color(
-        self, value: ColorLike | None, **kwargs: Any
-    ) -> None:
+    def _set_color(self, value: ColorLike | None, **kwargs: Any) -> None:
         self.naked().color = value
 
     # -----------------

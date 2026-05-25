@@ -35,6 +35,7 @@ if TYPE_CHECKING:
         GlyphObjectLoadingPointPen,
     )
 
+
 class RGlyph(RBaseObject, BaseGlyph):
     wrapClass = defcon.Glyph
     contourClass = RContour
@@ -322,9 +323,7 @@ class RGlyph(RBaseObject, BaseGlyph):
             value = tuple(value)
         return value
 
-    def _set_markColor(
-        self, value: ColorLike | None
-    ) -> None:
+    def _set_markColor(self, value: ColorLike | None) -> None:
         self.naked().markColor = value
 
     # Note

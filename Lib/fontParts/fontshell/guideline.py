@@ -3,12 +3,9 @@ from typing import Optional
 
 import defcon
 from fontParts.base import BaseGuideline
-from fontParts.base.annotations import (
-    RGBA,
-    ColorLike,
-    IntFloatType,
-)
+from fontParts.base.annotations import RGBA, ColorLike, IntFloatType
 from fontParts.fontshell.base import RBaseObject
+
 
 class RGuideline(RBaseObject, BaseGuideline):
     wrapClass = defcon.Guideline
@@ -82,7 +79,5 @@ class RGuideline(RBaseObject, BaseGuideline):
             value = tuple(value)
         return value
 
-    def _set_color(
-        self, value: ColorLike | None
-    ) -> None:
+    def _set_color(self, value: ColorLike | None) -> None:
         self.naked().color = value

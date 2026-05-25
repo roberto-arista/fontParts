@@ -10,6 +10,7 @@ from fontParts.fontshell.base import RBaseObject
 ValueType = tuple[str, ...]
 GroupsDict = dict[str, ValueType]
 
+
 class RGroups(RBaseObject, BaseGroups):
     wrapClass = defcon.Groups
 

@@ -28,8 +28,7 @@ BoundingBoxLike = list[IntFloatType] | BoundingBox
 # in `fontParts.base.color` wraps an `RGBA` to add `.r/.g/.b/.a` accessors.)
 RGBA = tuple[float, float, float, float]
 ColorLike = (
-    list[IntFloatType]
-    | tuple[IntFloatType, IntFloatType, IntFloatType, IntFloatType]
+    list[IntFloatType] | tuple[IntFloatType, IntFloatType, IntFloatType, IntFloatType]
 )
 
 # Affine transformation matrix — (xx, xy, yx, yy, dx, dy).

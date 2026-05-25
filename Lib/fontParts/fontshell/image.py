@@ -12,6 +12,7 @@ from fontParts.base.annotations import (
 )
 from fontParts.fontshell.base import RBaseObject
 
+
 class RImage(RBaseObject, BaseImage):
     wrapClass = defcon.Image
     _orphanData: bytes | None = None
@@ -40,9 +41,7 @@ class RImage(RBaseObject, BaseImage):
             value = tuple(value)
         return value
 
-    def _set_color(
-        self, value: ColorLike | None
-    ) -> None:
+    def _set_color(self, value: ColorLike | None) -> None:
         if self.font is None:
             self._orphanColor = value
         else:

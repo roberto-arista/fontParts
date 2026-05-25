@@ -3,11 +3,7 @@ from typing import Any, Optional, Tuple, Union
 import os
 
 import defcon
-from fontParts.base.annotations import (
-    ColorLike,
-    CoordinateLike,
-    NameSequence,
-)
+from fontParts.base.annotations import ColorLike, CoordinateLike, NameSequence
 from fontParts.base import BaseFont
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.info import RInfo
@@ -17,6 +13,7 @@ from fontParts.fontshell.features import RFeatures
 from fontParts.fontshell.lib import RLib
 from fontParts.fontshell.layer import RLayer
 from fontParts.fontshell.guideline import RGuideline
+
 
 class RFont(RBaseObject, BaseFont):
     wrapClass = defcon.Font
@@ -139,12 +136,7 @@ class RFont(RBaseObject, BaseFont):
 
     # new
 
-    def _newLayer(
-        self,
-        name: str,
-        color: ColorLike | None,
-        **kwargs: Any,
-    ) -> RLayer:
+    def _newLayer(self, name: str, color: ColorLike | None, **kwargs: Any) -> RLayer:
         layers = self.naked().layers
         layer = layers.newLayer(name)
         layer.color = color

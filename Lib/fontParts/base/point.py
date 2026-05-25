@@ -14,16 +14,14 @@ from fontParts.base.base import (
 )
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
-from fontParts.base.annotations import (
-    AffineTransformationLike,
-    IntFloatType,
-)
+from fontParts.base.annotations import AffineTransformationLike, IntFloatType
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.lib import BaseLib
     from fontParts.base.contour import BaseContour
+
 
 class BasePoint(
     BaseObject,
@@ -46,7 +44,13 @@ class BasePoint(
 
     """
 
-    copyAttributes: tuple[str, str, str, str, str] = ("type", "smooth", "x", "y", "name")
+    copyAttributes: tuple[str, str, str, str, str] = (
+        "type",
+        "smooth",
+        "x",
+        "y",
+        "name",
+    )
 
     def _reprContents(self) -> list[str]:
         contents = [f"{self.type}", f"({self.x}, {self.y})"]
@@ -562,9 +566,7 @@ class BasePoint(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native point.
 
         This is the environment implementation of :meth:`BasePoint.transformBy`.

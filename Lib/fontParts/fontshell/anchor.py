@@ -3,11 +3,9 @@ from typing import Optional
 
 import defcon
 from fontParts.base import BaseAnchor
-from fontParts.base.annotations import (
-    RGBA,
-    ColorLike,
-)
+from fontParts.base.annotations import RGBA, ColorLike
 from fontParts.fontshell.base import RBaseObject
+
 
 class RAnchor(RBaseObject, BaseAnchor):
     wrapClass = defcon.Anchor
@@ -71,7 +69,5 @@ class RAnchor(RBaseObject, BaseAnchor):
             value = tuple(value)
         return value
 
-    def _set_color(
-        self, value: ColorLike | None
-    ) -> None:
+    def _set_color(self, value: ColorLike | None) -> None:
         self.naked().color = value

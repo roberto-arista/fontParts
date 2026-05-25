@@ -29,6 +29,7 @@ if TYPE_CHECKING:
     from fontParts.base.layer import BaseLayer
     from fontParts.base.glyph import BaseGlyph
 
+
 class BaseAnchor(
     BaseObject,
     TransformationMixin,
@@ -94,9 +95,7 @@ class BaseAnchor(
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for anchor already set")
         if glyph is not None:
@@ -473,9 +472,7 @@ class BaseAnchor(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native anchor according to the given matrix.
 
         This is the environment implementation of :meth:`BaseAnchor.transformBy`.

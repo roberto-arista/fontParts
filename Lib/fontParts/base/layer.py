@@ -30,6 +30,7 @@ if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.lib import BaseLib
 
+
 class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
     """Provide common glyph interaction.
 
@@ -597,6 +598,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
     def _set_defaultLayer(self, value: BaseLayer) -> None:
         pass
 
+
 class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLayer):
     """Represent the basis for a layer object.
 
@@ -688,9 +690,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             return None
         return self._font()
 
-    def _set_font(
-        self, font: BaseFont | Callable[[], BaseFont] | None
-    ) -> None:
+    def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
         if self._font is not None:
             raise AssertionError("font for layer already set")
         if font is not None:
@@ -809,9 +809,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             value = Color(value)
         return value
 
-    def _set_base_color(
-        self, value: ColorLike | None
-    ) -> None:
+    def _set_base_color(self, value: ColorLike | None) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
@@ -835,9 +833,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """
         self.raiseNotImplementedError()
 
-    def _set_color(
-        self, value: ColorLike | None, **kwargs: Any
-    ) -> None:
+    def _set_color(self, value: ColorLike | None, **kwargs: Any) -> None:
         r"""Get or set the color of the layer.
 
         This is the environment implementation of

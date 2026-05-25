@@ -3,11 +3,9 @@ from typing import Optional, Type
 
 import defcon
 from fontParts.base import BaseComponent
-from fontParts.base.annotations import (
-    AffineTransformation,
-    AffineTransformationLike,
-)
+from fontParts.base.annotations import AffineTransformation, AffineTransformationLike
 from fontParts.fontshell.base import RBaseObject
+
 
 class RComponent(RBaseObject, BaseComponent):
     wrapClass: type[defcon.Component] = defcon.Component

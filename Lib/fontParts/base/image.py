@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from fontParts.base.layer import BaseLayer
     from fontParts.base.font import BaseFont
 
+
 class BaseImage(
     BaseObject, TransformationMixin, SelectionMixin, DeprecatedImage, RemovedImage
 ):
@@ -85,9 +86,7 @@ class BaseImage(
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for image already set")
         if glyph is not None:
@@ -169,9 +168,7 @@ class BaseImage(
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
-    def _set_base_transformation(
-        self, value: AffineTransformationLike
-    ) -> None:
+    def _set_base_transformation(self, value: AffineTransformationLike) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
@@ -366,9 +363,7 @@ class BaseImage(
             value = Color(value)
         return value
 
-    def _set_base_color(
-        self, value: ColorLike | None
-    ) -> None:
+    def _set_base_color(self, value: ColorLike | None) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
@@ -470,9 +465,7 @@ class BaseImage(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native image.
 
         This is the environment implementation of :meth:`BaseImage.transformBy`.

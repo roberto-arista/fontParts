@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from fontParts.base.point import BasePoint
     from fontParts.base.segment import BaseSegment
 
+
 class BaseBPoint(
     BaseObject,
     TransformationMixin,
@@ -614,9 +615,7 @@ class BaseBPoint(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native bPoint.
 
         This is the environment implementation of :meth:`BaseBPoint.transformBy`.
@@ -675,9 +674,8 @@ class BaseBPoint(
             normalizers.normalizeVisualRounding(y),
         )
 
-def relativeBCPIn(
-    anchor: CoordinateLike, BCPIn: CoordinateLike
-) -> Coordinate:
+
+def relativeBCPIn(anchor: CoordinateLike, BCPIn: CoordinateLike) -> Coordinate:
     """convert absolute incoming bcp value to a relative value.
 
     :param anchor: The anchor reference point from which to measure the relative
@@ -689,9 +687,8 @@ def relativeBCPIn(
     """
     return (BCPIn[0] - anchor[0], BCPIn[1] - anchor[1])
 
-def absoluteBCPIn(
-    anchor: CoordinateLike, BCPIn: CoordinateLike
-) -> Coordinate:
+
+def absoluteBCPIn(anchor: CoordinateLike, BCPIn: CoordinateLike) -> Coordinate:
     """convert relative incoming bcp value to an absolute value.
 
     :param anchor: The anchor reference point from which the relative BCP value
@@ -703,9 +700,8 @@ def absoluteBCPIn(
     """
     return (BCPIn[0] + anchor[0], BCPIn[1] + anchor[1])
 
-def relativeBCPOut(
-    anchor: CoordinateLike, BCPOut: CoordinateLike
-) -> Coordinate:
+
+def relativeBCPOut(anchor: CoordinateLike, BCPOut: CoordinateLike) -> Coordinate:
     """convert absolute outgoing bcp value to a relative value.
 
     :param anchor: The anchor reference point from which to measure the relative
@@ -717,9 +713,8 @@ def relativeBCPOut(
     """
     return (BCPOut[0] - anchor[0], BCPOut[1] - anchor[1])
 
-def absoluteBCPOut(
-    anchor: CoordinateLike, BCPOut: CoordinateLike
-) -> Coordinate:
+
+def absoluteBCPOut(anchor: CoordinateLike, BCPOut: CoordinateLike) -> Coordinate:
     """convert relative outgoing bcp value to an absolute value.
 
     :param anchor: The anchor reference point from which the relative BCP value

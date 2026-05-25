@@ -14,10 +14,7 @@ from fontParts.base.base import (
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedSegment, RemovedSegment
 from fontParts.base.compatibility import SegmentCompatibilityReporter
-from fontParts.base.annotations import (
-    AffineTransformationLike,
-    CollectionType,
-)
+from fontParts.base.annotations import AffineTransformationLike, CollectionType
 
 if TYPE_CHECKING:
     from fontParts.base.point import BasePoint
@@ -25,6 +22,7 @@ if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.layer import BaseLayer
     from fontParts.base.font import BaseFont
+
 
 class BaseSegment(
     BaseObject,
